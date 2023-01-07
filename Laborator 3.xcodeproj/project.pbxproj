@@ -273,6 +273,17 @@
 		14880DB1294F486F0074CEC1 /* Miniature_cat_SF.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Miniature_cat_SF.obj; sourceTree = "<group>"; };
 		14880DB2294F486F0074CEC1 /* Miniature_cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Miniature_cat.jpg; sourceTree = "<group>"; };
 		14880DB3294F486F0074CEC1 /* Miniature_cat_SF.mtl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Miniature_cat_SF.mtl; sourceTree = "<group>"; };
+		149751B529695051003AE965 /* sun.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sun.obj; sourceTree = "<group>"; };
+		149751B629695051003AE965 /* moon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = moon.obj; sourceTree = "<group>"; };
+		149751B729695060003AE965 /* sun.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sun.jpg; sourceTree = "<group>"; };
+		149751B829695060003AE965 /* moon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = moon.jpg; sourceTree = "<group>"; };
+		149751B929695060003AE965 /* sun.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sun.mtl; sourceTree = "<group>"; };
+		149751BA29695060003AE965 /* moon.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = moon.mtl; sourceTree = "<group>"; };
+		149751BB2969A00E003AE965 /* quad.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = quad.obj; sourceTree = "<group>"; };
+		149751BC2969A015003AE965 /* screenQuad.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = screenQuad.frag; sourceTree = "<group>"; };
+		149751BD2969A015003AE965 /* screenQuad.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = screenQuad.vert; sourceTree = "<group>"; };
+		149751BE2969A853003AE965 /* depthMapShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = depthMapShader.frag; sourceTree = "<group>"; };
+		149751BF2969A853003AE965 /* depthMapShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = depthMapShader.vert; sourceTree = "<group>"; };
 		14B9EAB7292420C900D76CBF /* scene.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = scene.obj; sourceTree = "<group>"; };
 		14B9EAB8292420D500D76CBF /* scene.mtl */ = {isa = PBXFileReference; lastKnownFileType = text; path = scene.mtl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -309,6 +320,9 @@
 		14724B3929194BBA007E0EC6 /* objects */ = {
 			isa = PBXGroup;
 			children = (
+				149751BB2969A00E003AE965 /* quad.obj */,
+				149751B629695051003AE965 /* moon.obj */,
+				149751B529695051003AE965 /* sun.obj */,
 				14880CD1294F485E0074CEC1 /* ship.obj */,
 				14880CD2294F485E0074CEC1 /* waterfallObj */,
 				14B9EAB7292420C900D76CBF /* scene.obj */,
@@ -336,6 +350,10 @@
 		14724B4A29194BBA007E0EC6 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				149751BE2969A853003AE965 /* depthMapShader.frag */,
+				149751BF2969A853003AE965 /* depthMapShader.vert */,
+				149751BC2969A015003AE965 /* screenQuad.frag */,
+				149751BD2969A015003AE965 /* screenQuad.vert */,
 				1458289B294773150028CBE5 /* skyboxShader.frag */,
 				1458289C294773150028CBE5 /* skyboxShader.vert */,
 				14724B4B29194BBA007E0EC6 /* shaderStart.vert */,
@@ -347,6 +365,10 @@
 		14724B4D29194BBA007E0EC6 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				149751B829695060003AE965 /* moon.jpg */,
+				149751BA29695060003AE965 /* moon.mtl */,
+				149751B729695060003AE965 /* sun.jpg */,
+				149751B929695060003AE965 /* sun.mtl */,
 				14880CFF294F486E0074CEC1 /* rocks */,
 				14880D38294F486E0074CEC1 /* sand.jpg */,
 				14880D1F294F486E0074CEC1 /* sea_house */,

@@ -9,7 +9,7 @@ uniform mat4 model;
 
 void main()
 {
-    vec4 tempPos = projection * view * vec4(vertexPosition, 1.0);
+    vec4 tempPos = projection * view * model * vec4(vertexPosition, 1.0);
     gl_Position = tempPos.xyww;
     textureCoordinates = vertexPosition;
 }

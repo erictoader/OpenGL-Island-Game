@@ -42,6 +42,9 @@ bool controllingShip = false;
 
 gps::Model3D sceneObject;
 
+gps::Model3D sunObject;
+gps::Model3D moonObject;
+
 gps::Model3D waterfallObject[15];
 int currentWaterfall = 0;
 bool reachedWaterfallEnd = false;
@@ -50,15 +53,25 @@ double lastGetTime = 0.0;
 gps::Shader myCustomShader;
 gps::Shader skyboxShader;
 gps::SkyBox mySkyBox;
+float dayNightOffset = 0.0f;
 
 glm::mat4 model;
 glm::mat4 view;
 glm::mat4 projection;
 
-glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 0.0f);
+glm::vec3 sunLightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 sunLightDir = glm::vec3(1.0f, 1.0f, 0.0f);
 
 glm::mat3 normalMatrix;
+
+gps::Model3D screenQuad;
+gps::Shader screenQuadShader;
+GLuint shadowMapFBO;
+GLuint depthMapTexture;
+gps::Shader depthMapShader;
+bool showDepthMap;
+const int SHADOW_WIDTH = 1920;
+const int SHADOW_HEIGHT = 1080;
 
 void windowResizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -69,6 +82,9 @@ void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	
+	if (key == GLFW_KEY_M && action == GLFW_PRESS)
+		showDepthMap = !showDepthMap;
 	
 	if (key >= 0 && key < 1024)
 	{
@@ -174,47 +190,86 @@ bool initOpenGLWindow()
 	return true;
 }
 
-void drawWaterfallModel() {
-	double currentGetTime = glfwGetTime();
-	// 60 fps capping
-	if (currentGetTime - lastGetTime > 0.016) {
-		if (!reachedWaterfallEnd) {
-			currentWaterfall++;
-			if (currentWaterfall == 14) reachedWaterfallEnd = true;
-		} else {
-			currentWaterfall--;
-			if (currentWaterfall == 0) reachedWaterfallEnd = false;
-		}
-		lastGetTime = currentGetTime;
-	}
-	model = glm::mat4(1.0f);
-	view = myCamera.getViewMatrix();
-	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-	waterfallObject[currentWaterfall].Draw(myCustomShader);
+void dayNightCycle() {
+//	dayNightOffset += 0.001;
+//	model = glm::mat4(1.0f);
+//	model = glm::rotate(model, dayNightOffset, glm::vec3(1, 0, 0));
+//	sunLightDir = glm::normalize(glm::vec3(model * glm::vec4(sunLightDir, 1.0f)));
 }
 
-void renderScene() {
-	glClearColor(0.8, 0.8, 0.8, 1.0);
+void selectNextWaterfall() {
+	if (!reachedWaterfallEnd) {
+		currentWaterfall++;
+		if (currentWaterfall == 14) reachedWaterfallEnd = true;
+	} else {
+		currentWaterfall--;
+		if (currentWaterfall == 0) reachedWaterfallEnd = false;
+	}
+}
+
+void frameEvent() {
+	double currentGetTime = glfwGetTime();
+	if (currentGetTime - lastGetTime > 1.0/60.0) {
+		dayNightCycle();
+		selectNextWaterfall();
+		lastGetTime = currentGetTime;
+	}
+}
+
+glm::mat4 computeLightSpaceTrMatrix() {
+	glm::mat4 lightView = glm::lookAt(sunLightDir, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	const GLfloat near_plane = 0.1f, far_plane = 5.0f;
+	glm::mat4 lightProjection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near_plane, far_plane);
+	glm::mat4 lightSpaceTrMatrix = lightProjection * lightView;
+
+	return lightSpaceTrMatrix;
+}
+
+void drawDepthMap() {
+	glViewport(0, 0, retina_width, retina_height);
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	screenQuadShader.useShaderProgram();
+
+	//bind the depth map
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthMapTexture);
+	glUniform1i(glGetUniformLocation(screenQuadShader.shaderProgram, "depthMap"), 0);
+
+	glDisable(GL_DEPTH_TEST);
+	screenQuad.Draw(screenQuadShader);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void drawObjects(gps::Shader shader, bool depthPass) {
+	glViewport(0, 0, retina_width, retina_height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	glViewport(0, 0, retina_width, retina_height);
+	shader.useShaderProgram();
 	
-	myCustomShader.useShaderProgram();
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, depthMapTexture);
 	
 	// World
 	model = glm::mat4(1.0f);
 	model = glm::rotate(model, angle, glm::vec3(0, 1, 0));
 	view = myCamera.getViewMatrix();
-	normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
 	
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightDir"), 1, glm::value_ptr(lightDir));
-	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightColor"), 1, glm::value_ptr(lightColor));
-	glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "sunLightDir"), 1, glm::value_ptr(sunLightDir));
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "sunLightColor"), 1, glm::value_ptr(sunLightColor));
+	glUniform1ui(glGetUniformLocation(myCustomShader.shaderProgram, "astralObject"), 0);
+	glUniform1i(glGetUniformLocation(myCustomShader.shaderProgram, "shadowMap"), 3);
+	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightSpaceTrMatrix"), 1, GL_FALSE, glm::value_ptr(computeLightSpaceTrMatrix()));
+	
 	sceneObject.Draw(myCustomShader);
 	
 	// Pirate ship
@@ -223,17 +278,60 @@ void renderScene() {
 	model = glm::rotate(model, myShip.getYawAngle(), glm::vec3(0, 1, 0));
 	view = myCamera.getViewMatrix();
 	
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	shipObject.Draw(myCustomShader);
 	
 	// Waterfalls
-	drawWaterfallModel();
+	model = glm::mat4(1.0f);
+	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	waterfallObject[currentWaterfall].Draw(myCustomShader);
 	
-	// Skybox
+	// Sun
+	model = glm::mat4(1.0f);
+	model = glm::rotate(model, dayNightOffset, glm::vec3(1, 0, 0));
+	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniform1ui(glGetUniformLocation(myCustomShader.shaderProgram, "astralObject"), 1);
+	sunObject.Draw(myCustomShader);
+	
+	// Moon
+	model = glm::mat4(1.0f);
+	model = glm::rotate(model, dayNightOffset, glm::vec3(1, 0, 0));
+	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	moonObject.Draw(myCustomShader);
+}
+
+void drawSkybox() {
 	skyboxShader.useShaderProgram();
+	model = glm::mat4(1.0f);
+	model = glm::rotate(model, dayNightOffset, glm::vec3(1, 0, 0));
+	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	mySkyBox.Draw(skyboxShader, view, projection);
+}
+
+void renderScene() {
+	frameEvent();
+	
+	depthMapShader.useShaderProgram();
+
+	glUniformMatrix4fv(glGetUniformLocation(depthMapShader.shaderProgram, "lightSpaceTrMatrix"), 1, GL_FALSE, glm::value_ptr(computeLightSpaceTrMatrix()));
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	drawObjects(depthMapShader, true);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	if (showDepthMap) {
+		drawDepthMap();
+	} else {
+		drawObjects(myCustomShader, false);
+		drawSkybox();
+	}
 }
 
 void cleanup() {
@@ -246,6 +344,9 @@ void cleanup() {
 void initObjects() {
 	sceneObject.LoadModel("objects/scene.obj", "textures/");
 	shipObject.LoadModel("objects/ship.obj", "textures/");
+	sunObject.LoadModel("objects/sun.obj", "textures/");
+	moonObject.LoadModel("objects/moon.obj", "textures/");
+	screenQuad.LoadModel("objects/quad.obj");
 	for(int i = 0; i < 15; i++) {
 		char objLocation[40];
 		sprintf(objLocation, "objects/waterfallObj/waterfall%d.obj", i+1);
@@ -256,7 +357,8 @@ void initObjects() {
 void initShaders() {
 	myCustomShader.loadShader("shaders/shaderStart.vert", "shaders/shaderStart.frag");
 	skyboxShader.loadShader("shaders/skyboxShader.vert", "shaders/skyboxShader.frag");
-	
+	screenQuadShader.loadShader("shaders/screenQuad.vert", "shaders/screenQuad.frag");
+	depthMapShader.loadShader("shaders/depthMapShader.vert", "shaders/depthMapShader.frag");
 	model = glm::mat4(1.0f);
 	view = myCamera.getViewMatrix();
 	projection = glm::perspective(glm::radians(45.0f), (float)retina_width / (float)retina_height, 0.1f, 1500.0f);
@@ -272,6 +374,27 @@ void initSkybox() {
 	faces.push_back("textures/skybox/front.tga");
 	
 	mySkyBox.Load(faces);
+}
+
+void initShadowMap() {
+	glGenFramebuffers(1, &shadowMapFBO);
+	
+	glGenTextures(1, &depthMapTexture);
+	glBindTexture(GL_TEXTURE_2D, depthMapTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 int main(int argc, const char * argv[]) {
@@ -290,6 +413,7 @@ int main(int argc, const char * argv[]) {
 	initObjects();
 	initShaders();
 	initSkybox();
+	initShadowMap();
 			
 	while (!glfwWindowShouldClose(glWindow)) {
 		processMovement();
