@@ -1,3 +1,6 @@
+#pragma once
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"	// Added due to OpenAL
+
 #include "SoundDevice.h"
 #include <stdio.h>
 

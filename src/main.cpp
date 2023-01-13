@@ -5,29 +5,8 @@
 //  Created by CGIS on 02/11/16.
 //  Copyright � 2016 CGIS. All rights reserved.
 //
-#define POLYGON_FILL 0
-#define POLYGON_LINE 1
-#define POLYGON_POINT 2
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <OpenAL/OpenAL.h>
-
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "utils/Shader.hpp"
-#include "utils/Model3D.hpp"
-#include "camera/Camera.hpp"
-#include "skybox/SkyBox.hpp"
-#include "ship/PirateShip.hpp"
-#include "collision/BoundingSphere.hpp"
+#include "main.hpp"
 
 const char APPNAME[] = "Island Explorer by Eric Toader";
 const int glWindowWidth = 1920;
@@ -93,6 +72,14 @@ const unsigned int SHADOW_HEIGHT = 16384;
 int polygonMode = 0;
 
 // Audio player
+SoundDevice* mysounddevice = SoundDevice::get();
+SoundBuffer* soundBuffer = SoundBuffer::get();
+bool shouldStop = false;
+bool muteAudio = true;
+
+// Sea sound
+ALuint seaSound;
+std::thread seaPlayerThread;
 
 void windowResizeCallback(GLFWwindow* window, int width, int height) {
 	glfwSetWindowSize(window, width, height);
@@ -102,7 +89,10 @@ void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	
-	if (key == GLFW_KEY_M && action == GLFW_PRESS)
+	if (pressedKeys[GLFW_KEY_LEFT_CONTROL] && key == GLFW_KEY_M && action == GLFW_PRESS)
+		muteAudio = !muteAudio;
+	
+	if (!pressedKeys[GLFW_KEY_LEFT_CONTROL] && key == GLFW_KEY_M && action == GLFW_PRESS)
 		showDepthMap = !showDepthMap;
 	
 	if (key == GLFW_KEY_F && action == GLFW_PRESS)
@@ -157,6 +147,12 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 	myCamera.rotate(deltaPitch, deltaYaw);
 }
 
+bool isOutOfBounds() {
+	if (myShip.getPosition().x > 720.f || myShip.getPosition().x < -720.f) return true;
+	if (myShip.getPosition().z > 720.f || myShip.getPosition().z < -720.f) return true;
+	return false;
+}
+
 bool isLegalMove(etoader::MOVE_DIRECTION direction) {
 	
 	// ship move for calculation
@@ -166,15 +162,23 @@ bool isLegalMove(etoader::MOVE_DIRECTION direction) {
 	
 	if (shipBounding.isColliding(pirateHouseBounding)) {
 		legal = false;
+		goto doneEvaluating;
 	} else if (shipBounding.isColliding(villageHouseBounding)) {
 		legal = false;
+		goto doneEvaluating;
 	} else if (shipBounding.isColliding(pyramidBounding)) {
 		legal = false;
+		goto doneEvaluating;
 	} else if (shipBounding.isColliding(pyramidShoreBounding)) {
 		legal = false;
+		goto doneEvaluating;
 	}
 	
+	if (isOutOfBounds()) legal = false;
+	goto doneEvaluating;
+	
 	// undo ship move
+	doneEvaluating:
 	if (direction == etoader::MOVE_BACKWARD) myShip.move(etoader::MOVE_FORWARD);
 	else myShip.move(etoader::MOVE_BACKWARD);
 	shipBounding.updateObjectPosition(myShip.getPosition());
@@ -506,6 +510,9 @@ void renderScene() {
 }
 
 void cleanup() {
+	shouldStop = true;
+	seaPlayerThread.join();
+	
 	glfwDestroyWindow(glWindow);
 	//close GL context and any other GLFW resources
 	glfwTerminate();
@@ -597,6 +604,21 @@ void initShadowMap() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void playSea(SoundSource &speaker) {
+	seaSound = soundBuffer->addSoundEffect("res/sounds/sea.mp3");
+	speaker.Play(seaSound, shouldStop);
+	
+	soundBuffer->removeSoundEffect(seaSound);
+}
+
+void adjustSeaVolume(glm::vec3 position, SoundSource &seaSpeaker) {
+	float volume = 0.f;
+	if (position.y < 400.f)
+		volume = muteAudio ? 0.f : (400.f - position.y) / 400.f;
+	
+	seaSpeaker.setVolume(volume);
+}
+
 int main(int argc, const char * argv[]) {
 	
 	if (!initOpenGLWindow()) {
@@ -611,9 +633,13 @@ int main(int argc, const char * argv[]) {
 	initSkybox();
 	initShadowMap();
 	
+	SoundSource seaSpeaker;
+	seaPlayerThread = std::thread(playSea, std::ref(seaSpeaker));
+	
 	while (!glfwWindowShouldClose(glWindow)) {
 		processMovement();
 		renderScene();
+		adjustSeaVolume(myCamera.getPosition(), seaSpeaker);
 		
 		glfwPollEvents();
 		glfwSwapBuffers(glWindow);

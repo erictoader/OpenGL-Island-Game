@@ -1,3 +1,6 @@
+#pragma once
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"	// Added due to OpenAL
+
 #include "SoundSource.h"
 #include <iostream>
 
@@ -17,7 +20,7 @@ SoundSource::~SoundSource()
 	alDeleteSources(1, &p_Source);
 }
 
-void SoundSource::Play(const ALuint buffer_to_play)
+void SoundSource::Play(const ALuint buffer_to_play, bool &shouldStop)
 {
 	if (buffer_to_play != p_Buffer)
 	{
@@ -27,13 +30,17 @@ void SoundSource::Play(const ALuint buffer_to_play)
 
 	alSourcePlay(p_Source);
 
-
 	ALint state = AL_PLAYING;
-	std::cout << "playing sound\n";
-	while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
+	
+	while (state == AL_PLAYING && alGetError() == AL_NO_ERROR && shouldStop == false)
 	{
-		std::cout << "currently playing sound\n";
 		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
+		
+		// set volume
+		alSourcef(p_Source, AL_GAIN, p_Gain);
 	}
-	std::cout << "done playing sound\n";
+}
+
+void SoundSource::setVolume(float volume) {
+	this->p_Gain = volume;
 }
