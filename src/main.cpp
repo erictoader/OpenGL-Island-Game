@@ -1,34 +1,35 @@
-//
-//  main.cpp
-//  OpenGL_Shader_Example_step1
-//
-//  Created by CGIS on 02/11/16.
-//  Copyright � 2016 CGIS. All rights reserved.
-//
-
 #include "main.hpp"
 
-const char APPNAME[] = "Island Explorer by Eric Toader";
-const int glWindowWidth = 1920;
-const int glWindowHeight = 1080;
-int retina_width, retina_height;
-GLFWwindow* glWindow = NULL;
+// Camera/player object
+gps::Camera camera(glm::vec3(0.0f, 20.0f, 100.0f), glm::vec3(0.0f, 20.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f, 0.0f, 0.0f);
 
-gps::Camera myCamera(glm::vec3(0.0f, 20.0f, 100.0f), glm::vec3(0.0f, 20.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f, 0.0f, 0.0f);
+// Movable objects
+etoader::PirateShip ship(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, 3.0f);
+etoader::Dragon dragon(glm::vec3(300.0f, 300.0f, -300.0f), glm::vec3(1.0f, 300.0f, 0.0f), 0.0f, 0.8f);
 
-etoader::PirateShip myShip(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, 3.0f);
+// Bounding spheres
 etoader::BoundingSphere shipBounding(glm::vec3(0, 0, 0), 40.0f);
 etoader::BoundingSphere pirateHouseBounding(glm::vec3(480, 0, 360), 140.0f);
 etoader::BoundingSphere villageHouseBounding(glm::vec3(-410, 0, 290), 245.0f);
 etoader::BoundingSphere pyramidBounding(glm::vec3(230, 0, -460), 220.0f);
 etoader::BoundingSphere pyramidShoreBounding(glm::vec3(-120, 0, -580), 130.0f);
 
-bool pressedKeys[1024];
-float angle = 0.0f;
+// Random generator
+std::random_device dev;
+std::mt19937 rng(dev());
 
+// 3D Model Objects
 gps::Model3D shipObject;
 gps::Model3D shipWheel;
 bool controllingShip = false;
+
+gps::Model3D dragonBody;
+gps::Model3D dragonWingLeft;
+gps::Model3D dragonWingRight;
+std::uniform_int_distribution<int> dragonAngles(-2, 2);
+int lastDragonRotate;
+float dragonWingsAngle = 10.f;
+bool dragonWingsAscending = false;
 
 gps::Model3D sceneObject;
 
@@ -41,8 +42,12 @@ bool reachedWaterfallEnd = false;
 double lastGetTime = 0.0;
 
 gps::Shader myCustomShader;
-gps::Shader skyboxShader;
+
+// Skybox
 gps::SkyBox mySkyBox;
+gps::Shader skyboxShader;
+
+// Day - Night cycle
 float dayNightOffset = 0.0f;
 float dayNightAccelerator = 1.0f;
 float dayNightDelta = 0.0f;
@@ -50,26 +55,26 @@ bool dayNightAccelerating = false;
 float dayNightAngle;
 float dayFactor;
 
+// Uniform information
 glm::mat4 model;
 glm::mat4 view;
 glm::mat4 projection;
+glm::mat3 normalMatrix;
 
 glm::vec3 lightColor = glm::vec3(0.986f, 1.0f, 0.709f);
 glm::vec3 lightDir = glm::vec3(0.0f, 500.0f, 0.0f);
 glm::vec3 moonLightColor = glm::vec3(0.454f, 0.925f, 0.940f);
 glm::vec3 moonLightDir = glm::vec3(0.0f, -500.0f, 0.0f);
 
-glm::mat3 normalMatrix;
-
+// Shadows
+const unsigned int SHADOW_WIDTH = 16384;
+const unsigned int SHADOW_HEIGHT = 16384;
 gps::Model3D screenQuad;
 gps::Shader screenQuadShader;
 GLuint shadowMapFBO;
 GLuint depthMapTexture;
 gps::Shader depthMapShader;
 bool showDepthMap;
-const unsigned int SHADOW_WIDTH = 16384;
-const unsigned int SHADOW_HEIGHT = 16384;
-int polygonMode = 0;
 
 // Audio player
 SoundDevice* mysounddevice = SoundDevice::get();
@@ -77,7 +82,6 @@ SoundBuffer* soundBuffer = SoundBuffer::get();
 bool shouldStop = false;
 bool muteAudio = true;
 
-// Sea sound
 ALuint seaSound;
 std::thread seaPlayerThread;
 
@@ -144,20 +148,20 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 	float deltaYaw = deltaX * sensitivity;
 	float deltaPitch = deltaY * sensitivity;
 	
-	myCamera.rotate(deltaPitch, deltaYaw);
+	camera.rotate(deltaPitch, deltaYaw);
 }
 
 bool isOutOfBounds() {
-	if (myShip.getPosition().x > 720.f || myShip.getPosition().x < -720.f) return true;
-	if (myShip.getPosition().z > 720.f || myShip.getPosition().z < -720.f) return true;
+	if (ship.getPosition().x > 720.f || ship.getPosition().x < -720.f) return true;
+	if (ship.getPosition().z > 720.f || ship.getPosition().z < -720.f) return true;
 	return false;
 }
 
 bool isLegalMove(etoader::MOVE_DIRECTION direction) {
 	
 	// ship move for calculation
-	myShip.move(direction);
-	shipBounding.updateObjectPosition(myShip.getPosition());
+	ship.move(direction);
+	shipBounding.updateObjectPosition(ship.getPosition());
 	bool legal = true;
 	
 	if (shipBounding.isColliding(pirateHouseBounding)) {
@@ -179,44 +183,39 @@ bool isLegalMove(etoader::MOVE_DIRECTION direction) {
 	
 	// undo ship move
 	doneEvaluating:
-	if (direction == etoader::MOVE_BACKWARD) myShip.move(etoader::MOVE_FORWARD);
-	else myShip.move(etoader::MOVE_BACKWARD);
-	shipBounding.updateObjectPosition(myShip.getPosition());
+	if (direction == etoader::MOVE_BACKWARD) ship.move(etoader::MOVE_FORWARD);
+	else ship.move(etoader::MOVE_BACKWARD);
+	shipBounding.updateObjectPosition(ship.getPosition());
 	
 	return legal;
 }
 
 void processMovement() {
-	if (pressedKeys[GLFW_KEY_Q]) {
-		angle += 0.1f;
-	}
-	if (pressedKeys[GLFW_KEY_E]) {
-		angle -= 0.1f;
-	}
+	
 	if (pressedKeys[GLFW_KEY_W]) {
 		if (controllingShip) {
-			if (isLegalMove(etoader::MOVE_FORWARD)) myShip.move(etoader::MOVE_FORWARD);
-		} else myCamera.move(gps::MOVE_FORWARD);
+			if (isLegalMove(etoader::MOVE_FORWARD)) ship.move(etoader::MOVE_FORWARD);
+		} else camera.move(gps::MOVE_FORWARD);
 	}
 	if (pressedKeys[GLFW_KEY_S]) {
 		if (controllingShip) {
-			if (isLegalMove(etoader::MOVE_BACKWARD)) myShip.move(etoader::MOVE_BACKWARD);
-		} else myCamera.move(gps::MOVE_BACKWARD);
+			if (isLegalMove(etoader::MOVE_BACKWARD)) ship.move(etoader::MOVE_BACKWARD);
+		} else camera.move(gps::MOVE_BACKWARD);
 	}
 	if (pressedKeys[GLFW_KEY_A]) {
-		if (controllingShip) myShip.rotate(0.01f);
-		else myCamera.move(gps::MOVE_LEFT);
+		if (controllingShip) ship.rotate(0.01f);
+		else camera.move(gps::MOVE_LEFT);
 	}
 	if (pressedKeys[GLFW_KEY_D]) {
-		if (controllingShip) myShip.rotate(-0.01f);
-		else myCamera.move(gps::MOVE_RIGHT);
+		if (controllingShip) ship.rotate(-0.01f);
+		else camera.move(gps::MOVE_RIGHT);
 	}
 	
 	if (pressedKeys[GLFW_KEY_SPACE]) {
-		myCamera.move(gps::MOVE_UPWARD);
+		camera.move(gps::MOVE_UPWARD);
 	}
 	if (pressedKeys[GLFW_KEY_LEFT_SHIFT]) {
-		myCamera.move(gps::MOVE_DOWNWARD);
+		camera.move(gps::MOVE_DOWNWARD);
 	}
 }
 
@@ -266,7 +265,7 @@ bool initOpenGLWindow() {
 }
 
 void initOpenGLState() {
-	glClearColor(0.3, 0.3, 0.3, 1.0);
+	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glViewport(0, 0, retina_width, retina_height);
 	
 	glEnable(GL_DEPTH_TEST); // enable depth-testing
@@ -313,6 +312,56 @@ void dayNightCycle() {
 	}
 }
 
+void moveDragon() {
+	int currentRotate;
+	
+	// turn around
+	if (dragon.getPosition().x > 730) {
+		currentRotate = -2;
+		goto commit;
+
+	} else if (dragon.getPosition().x < -730) {
+		currentRotate = -2;
+		goto commit;
+		
+	} else if (dragon.getPosition().z > 730) {
+		currentRotate = -2;
+		goto commit;
+		
+	} else if (dragon.getPosition().z < -730) {
+		currentRotate = -2;
+		goto commit;
+	}
+	
+	do {
+		currentRotate = dragonAngles(rng);
+		
+	} while (abs(currentRotate - lastDragonRotate) > 1);
+	
+	goto commit;
+	
+	commit:
+	dragon.move(etoader::MOVE_FORWARD);
+	dragon.rotate(0.005f * currentRotate);
+	lastDragonRotate = currentRotate;
+}
+
+void moveDragonWings() {
+	if (dragonWingsAscending) {
+		dragonWingsAngle += 0.3f;
+	} else {
+		dragonWingsAngle -= 0.3f;
+	}
+	
+	if (dragonWingsAngle > 15.f) {
+		dragonWingsAscending = false;
+	}
+	
+	if (dragonWingsAngle < -15.f) {
+		dragonWingsAscending = true;
+	}
+}
+
 void selectNextWaterfall() {
 	if (!reachedWaterfallEnd) {
 		currentWaterfall++;
@@ -328,6 +377,9 @@ void frameEvent() {
 	
 	if (currentGetTime - lastGetTime > 1.0/60.0) {
 		dayNightCycle();
+		moveDragon();
+		moveDragonWings();
+		
 		selectNextWaterfall();
 		lastGetTime = currentGetTime;
 	}
@@ -395,7 +447,6 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 	
 	// World
 	model = glm::mat4(1.0f);
-	model = glm::rotate(model, angle, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	glUniform1ui(glGetUniformLocation(shader.shaderProgram, "astralObject"), 0);
 	
@@ -408,8 +459,8 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 	
 	// Pirate ship
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, myShip.getPosition());
-	model = glm::rotate(model, myShip.getYawAngle(), glm::vec3(0, 1, 0));
+	model = glm::translate(model, ship.getPosition());
+	model = glm::rotate(model, ship.getYawAngle(), glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	
 	if (!depthPass) {
@@ -417,15 +468,15 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
 	}
 	
-	shipBounding.updateObjectPosition(myShip.getPosition());
+	shipBounding.updateObjectPosition(ship.getPosition());
 	shipObject.Draw(shader);
 	
 	// Pirate ship wheel
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, myShip.getPosition());
-	model = glm::rotate(model, myShip.getYawAngle(), glm::vec3(0, 1, 0));
+	model = glm::translate(model, ship.getPosition());
+	model = glm::rotate(model, ship.getYawAngle(), glm::vec3(0, 1, 0));
 	model = glm::translate(model, glm::vec3(-15.2f, +9.8f, +0.2f));
-	model = glm::rotate(model, 10 * -myShip.getYawAngle(), glm::vec3(1, 0, 0));
+	model = glm::rotate(model, 10 * -ship.getYawAngle(), glm::vec3(1, 0, 0));
 	model = glm::translate(model, glm::vec3(15.2f, -9.8f, -0.2f));
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	
@@ -435,6 +486,52 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 	}
 	
 	shipWheel.Draw(shader);
+	
+	// Dragon
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, dragon.getPosition());
+	model = glm::rotate(model, dragon.getYawAngle(), glm::vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(90.f), glm::vec3(0, 1, 0));
+	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
+	
+	dragonBody.Draw(shader);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, dragon.getPosition());
+	model = glm::rotate(model, dragon.getYawAngle(), glm::vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(90.f), glm::vec3(0, 1, 0));
+	model = glm::translate(model, glm::vec3(-7.f, 10.f, 40.f));
+	model = glm::rotate(model, glm::radians(-dragonWingsAngle), glm::vec3(0, 0, 1));
+	model = glm::translate(model, glm::vec3(7.f, -10.f, -40.f));
+	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
+	
+	dragonWingLeft.Draw(shader);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, dragon.getPosition());
+	model = glm::rotate(model, dragon.getYawAngle(), glm::vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(90.f), glm::vec3(0, 1, 0));
+	model = glm::translate(model, glm::vec3(7.f, 10.f, 40.f));
+	model = glm::rotate(model, glm::radians(dragonWingsAngle), glm::vec3(0, 0, 1));
+	model = glm::translate(model, glm::vec3(-7.f, -10.f, -40.f));
+	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
+	
+	dragonWingRight.Draw(shader);
 	
 	// Waterfalls
 	drawWaterfalls();
@@ -487,7 +584,7 @@ void renderScene() {
 		
 		myCustomShader.useShaderProgram();
 		
-		view = myCamera.getViewMatrix();
+		view = camera.getViewMatrix();
 		glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		
 		glm::mat4 lightRotation = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -520,16 +617,24 @@ void cleanup() {
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"	// Added due to sprintf
 void initObjects() {	
-	sceneObject.LoadModel("res/objects/scene.obj", "res/textures/");
-	shipObject.LoadModel("res/objects/ship.obj", "res/textures/");
-	shipWheel.LoadModel("res/objects/shipwheel.obj", "res/textures/");
-	sunObject.LoadModel("res/objects/sun.obj", "res/textures/");
-	moonObject.LoadModel("res/objects/moon.obj", "res/textures/");
+	sceneObject.LoadModel("res/objects/scene.obj", "res/mtl/");
+	
+	shipObject.LoadModel("res/objects/ship.obj", "res/mtl/");
+	shipWheel.LoadModel("res/objects/shipwheel.obj", "res/mtl/");
+	
+	dragonBody.LoadModel("res/objects/dragonObj/dragon_body.obj", "res/mtl/dragonMtl/");
+	dragonWingLeft.LoadModel("res/objects/dragonObj/dragon_wing_left.obj", "res/mtl/dragonMtl/");
+	dragonWingRight.LoadModel("res/objects/dragonObj/dragon_wing_right.obj", "res/mtl/dragonMtl/");
+	
+	sunObject.LoadModel("res/objects/sun.obj", "res/mtl/");
+	moonObject.LoadModel("res/objects/moon.obj", "res/mtl/");
+	
 	screenQuad.LoadModel("res/objects/quad.obj");
+	
 	for(int i = 0; i < 15; i++) {
 		char objLocation[60];
 		sprintf(objLocation, "res/objects/waterfallObj/waterfall%d.obj", i+1);
-		waterfallObject[i].LoadModel(objLocation, "res/textures/waterfallMtl/");
+		waterfallObject[i].LoadModel(objLocation, "res/mtl/waterfallMtl/");
 	}
 }
 
@@ -546,7 +651,7 @@ void initUniforms() {
 	model = glm::mat4(1.0f);
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 	
-	view = myCamera.getViewMatrix();
+	view = camera.getViewMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(myCustomShader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	
 	normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
@@ -619,6 +724,7 @@ void adjustSeaVolume(glm::vec3 position, SoundSource &seaSpeaker) {
 	seaSpeaker.setVolume(volume);
 }
 
+
 int main(int argc, const char * argv[]) {
 	
 	if (!initOpenGLWindow()) {
@@ -639,7 +745,7 @@ int main(int argc, const char * argv[]) {
 	while (!glfwWindowShouldClose(glWindow)) {
 		processMovement();
 		renderScene();
-		adjustSeaVolume(myCamera.getPosition(), seaSpeaker);
+		adjustSeaVolume(camera.getPosition(), seaSpeaker);
 		
 		glfwPollEvents();
 		glfwSwapBuffers(glWindow);

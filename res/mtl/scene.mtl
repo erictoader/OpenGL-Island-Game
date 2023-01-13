@@ -1,0 +1,605 @@
+# Blender 3.3.1 MTL File: 'scene.blend'
+# www.blender.org
+
+newmtl 11112_sheet_Material__25.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/sea_house/sea_11112_sheet_Material__25_color.tga.png
+
+newmtl 11112_sheet_Material__37.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/sea_house/sea_11112_sheet_Material__37_color.tga.png
+
+newmtl GnF
+Ns 2.499995
+Ka 1.000000 1.000000 1.000000
+Ks 0.177273 0.177273 0.177273
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd ../textures/houses/WALL2.png
+map_d ../textures/houses/WALL2.png
+
+newmtl MAIN
+Ns 25.309908
+Ka 1.000000 1.000000 1.000000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd ../textures/houses/WALL2.png
+map_d ../textures/houses/WALL2.png
+
+newmtl Material.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pirate_hat/brim.jpeg
+
+newmtl Material.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pirate_hat/main.jpeg
+
+newmtl Material.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/water.jpg
+
+newmtl Material.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/sand.jpg
+
+newmtl Material.017
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.018
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/barrel.jpg
+
+newmtl Material.019
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/Rope-01.png
+
+newmtl Material.020
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/gold_textured_background_hd_picture_1_169656.jpg
+
+newmtl Material.021
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pirate_hat/brim.jpeg
+
+newmtl Material.022
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2579513_orig.jpg
+
+newmtl Material.023
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/brushed_metal_texture_by_freestock.jpg
+
+newmtl Material.024
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.025
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.026
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/Rope-01.png
+
+newmtl Material.027
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.028
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.029
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/tower/bone.jpg
+
+newmtl Material.030
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/tower/blue_fabric.jpg
+
+newmtl Material.032
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/boat/Mesh_Base_Color.PNG
+
+newmtl Material.033
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/boat/Mesh_Base_Color.PNG
+
+newmtl Material.034
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/boat/Mesh_Base_Color.PNG
+
+newmtl Material.035
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/boat/Mesh_Base_Color.PNG
+
+newmtl Material.036
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/boat/Mesh_Base_Color.PNG
+
+newmtl Material.038
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/grass.jpg
+
+newmtl Material.039
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/houses/Rock.png
+
+newmtl Material.040
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/dock/2451-high-resolution-images-of-wood-material-1 copy.jpg
+
+newmtl Material.041
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/well/Well_Finish_Handle_Diffuse.png
+map_Ns ../textures/well/Well_Finish_Handle_Roughness.png
+map_Bump ../textures/well/Well_Finish_Handle_Normal.png
+
+newmtl Material.042
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/water.jpg
+
+newmtl Material.043
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pirate_hat/main.jpeg
+
+newmtl Material.044
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pirate_hat/main.jpeg
+
+newmtl Miniature_cat
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/cat/Miniature_cat.jpg
+map_Bump ../textures/cat/Miniature_cat_normal.jpg
+
+newmtl None
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.003
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.004
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.005
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.006
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.007
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl None.008
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../textures/spear/1spaer_color_1024x1024.png
+map_Ns ../textures/spear/1spear_roughness_1024x1024.png
+map_refl ../textures/spear/1spear_metal_1024x1024.png
+map_Bump -bm 1.000000 ../textures/spear/1spear_normal_1024x1024.png
+
+newmtl ROOFM
+Ns 25.309908
+Ka 1.000000 1.000000 1.000000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd ../textures/houses/ROOF1.png
+map_d ../textures/houses/ROOF1.png
+map_Bump -bm 0.800000 /Users/erictoader/Library/CloudStorage/OneDrive-TechnicalUniversityofCluj-Napoca/ANUL III/PG/Laborator 6/textures/houses/C:/Users/ANJU/Documents/BlenderProjects/Houses/ROOF1N.png
+
+newmtl Well_Finish
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/well/Well_Finish_Diffuse.png
+map_Ns ../textures/well/Well_Finish_Roughness.png
+map_Bump ../textures/well/Well_Finish_Normal.png
+
+newmtl Window
+Ns 911.157104
+Ka 1.000000 1.000000 1.000000
+Kd 0.037001 0.252943 0.158654
+Ks 0.950000 0.950000 0.950000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl all
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/cannon/marinagunLP_all_BaseColor.png
+map_Ns ../textures/cannon/marinagunLP_all_Roughness.png
+map_refl ../textures/cannon/marinagunLP_all_Metallic.png
+
+newmtl all.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/cannon/marinagunLP_all_BaseColor.png
+map_Ns ../textures/cannon/marinagunLP_all_Roughness.png
+map_refl ../textures/cannon/marinagunLP_all_Metallic.png
+
+newmtl all.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/cannon/marinagunLP_all_BaseColor.png
+map_Ns ../textures/cannon/marinagunLP_all_Roughness.png
+map_refl ../textures/cannon/marinagunLP_all_Metallic.png
+
+newmtl initialShadingGroup
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd ../textures/brazier/initialShadingGroup_albedo.jpg
+map_Ns ../textures/brazier/initialShadingGroup_roughness.jpg
+map_refl ../textures/brazier/initialShadingGroup_metallic.jpg
+map_Ke ../textures/brazier/initialShadingGroup_emissive.jpg
+map_Bump -bm 1.000000 ../textures/brazier/initialShadingGroup_normal.png
+
+newmtl initialShadingGroup.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd ../textures/brazier/initialShadingGroup_albedo.jpg
+map_Ns ../textures/brazier/initialShadingGroup_roughness.jpg
+map_refl ../textures/brazier/initialShadingGroup_metallic.jpg
+map_Ke ../textures/brazier/initialShadingGroup_emissive.jpg
+map_Bump -bm 1.000000 ../textures/brazier/initialShadingGroup_normal.png
+
+newmtl initialShadingGroup.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd ../textures/brazier/initialShadingGroup_albedo.jpg
+map_Ns ../textures/brazier/initialShadingGroup_roughness.jpg
+map_refl ../textures/brazier/initialShadingGroup_metallic.jpg
+map_Ke ../textures/brazier/initialShadingGroup_emissive.jpg
+map_Bump -bm 1.000000 ../textures/brazier/initialShadingGroup_normal.png
+
+newmtl initialShadingGroup.003
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd ../textures/brazier/initialShadingGroup_albedo.jpg
+map_Ns ../textures/brazier/initialShadingGroup_roughness.jpg
+map_refl ../textures/brazier/initialShadingGroup_metallic.jpg
+map_Ke ../textures/brazier/initialShadingGroup_emissive.jpg
+map_Bump -bm 1.000000 ../textures/brazier/initialShadingGroup_normal.png
+
+newmtl skeleton
+Ns 406.956024
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/tower/bone.jpg
+
+newmtl skeleton.001
+Ns 406.956024
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/tower/bone.jpg
+
+newmtl textured_0
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.050000 0.050000 0.050000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ../textures/pyramid/1.png

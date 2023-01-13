@@ -32,6 +32,13 @@ vec3 specular;
 float specularStrength = 0.5f;
 float shininess = 32.0f;
 
+float computeFog() {
+	float fogDensity = 0.0005f;
+	float fragmentDistance = length(fPosEye);
+	float fogFactor = exp(-pow(fragmentDistance * fogDensity, 2));
+	return clamp(fogFactor, 0.0f, 1.0f);
+}
+
 float computeShadow() {
 	//perform perspective divide
 	vec3 normalizedCoords= fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -100,8 +107,10 @@ void main() {
 	diffuse = dayFactor * sunDiffuse + (1.0f - dayFactor) * moonDiffuse;
 	specular = dayFactor * sunDiffuse + (1.0f - dayFactor) * moonDiffuse;
 	
-	vec3 color = min((ambient + (1.0f - shadow) * diffuse) + (1.0f - shadow) * specular, 1.0f);
+	vec4 color = vec4(min((ambient + (1.0f - shadow) * diffuse) + (1.0f - shadow) * specular, 1.0f), 1.0f);
 	
-	fColor = vec4(color, 1.0f);
+	float fogFactor = computeFog();
+	vec4 fogColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	fColor = mix(fogColor, color, fogFactor);
 
 }

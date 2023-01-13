@@ -24,16 +24,28 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include <random>
 #include <thread>
 
 #include "utils/Shader.hpp"
 #include "utils/Model3D.hpp"
 #include "camera/Camera.hpp"
 #include "skybox/SkyBox.hpp"
-#include "ship/PirateShip.hpp"
+#include "animation/ship/PirateShip.hpp"
+#include "animation/dragon/Dragon.hpp"
 #include "collision/BoundingSphere.hpp"
 #include "sound/SoundBuffer.h"
 #include "sound/SoundDevice.h"
 #include "sound/SoundSource.h"
 
 #endif /* main_h */
+
+const char APPNAME[] = "Island Explorer by Eric Toader";
+const int glWindowWidth = 1920;
+const int glWindowHeight = 1080;
+int retina_width, retina_height;
+GLFWwindow* glWindow = NULL;
+
+bool pressedKeys[1024];
+
+int polygonMode = 0;
