@@ -15,7 +15,7 @@
 
 #endif /* PirateShip_hpp */
 
-namespace pirate {
+namespace etoader {
 	
 	enum MOVE_DIRECTION {MOVE_FORWARD, MOVE_BACKWARD};
 	
@@ -27,6 +27,8 @@ namespace pirate {
 		float getYawAngle();
 		
 		glm::vec3 getPosition();
+		
+		glm::vec3 getFrontDirection();
 			
 		void move(MOVE_DIRECTION direction);
 

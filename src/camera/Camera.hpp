@@ -18,6 +18,10 @@ namespace gps {
         glm::mat4 getViewMatrix();
 		
         void move(MOVE_DIRECTION direction);
+		
+		glm::vec3 getPosition();
+		
+		glm::vec3 getTarget();
 
         void rotate(float deltaPitch, float deltaYaw);
         

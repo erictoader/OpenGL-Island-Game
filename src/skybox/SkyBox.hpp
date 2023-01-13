@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "Shader.hpp"
 #include <vector>
-#include "utils/stb_image.h"
+#include "../utils/stb_image.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
