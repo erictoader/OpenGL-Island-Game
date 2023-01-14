@@ -179,7 +179,6 @@
 		1497547C2971F875003AE965 /* bronze.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bronze.jpg; sourceTree = "<group>"; };
 		1497547D2971F875003AE965 /* dark_wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dark_wood.jpg; sourceTree = "<group>"; };
 		1497547E2971F875003AE965 /* iron.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = iron.jpg; sourceTree = "<group>"; };
-		1497547F2971F875003AE965 /* glass.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = glass.jpg; sourceTree = "<group>"; };
 		149754802971F875003AE965 /* white.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = white.jpg; sourceTree = "<group>"; };
 		149754812971F875003AE965 /* sun.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sun.jpg; sourceTree = "<group>"; };
 		149754822971F875003AE965 /* sand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sand.jpg; sourceTree = "<group>"; };
@@ -271,6 +270,7 @@
 		149754F329720930003AE965 /* depthMapShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = depthMapShader.vert; sourceTree = "<group>"; };
 		149754F429720930003AE965 /* shaderStart.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shaderStart.frag; sourceTree = "<group>"; };
 		149754F529720930003AE965 /* skyboxShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = skyboxShader.vert; sourceTree = "<group>"; };
+		149754F629729178003AE965 /* glass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glass.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -640,10 +640,10 @@
 		1497547B2971F875003AE965 /* ship */ = {
 			isa = PBXGroup;
 			children = (
+				149754F629729178003AE965 /* glass.png */,
 				1497547C2971F875003AE965 /* bronze.jpg */,
 				1497547D2971F875003AE965 /* dark_wood.jpg */,
 				1497547E2971F875003AE965 /* iron.jpg */,
-				1497547F2971F875003AE965 /* glass.jpg */,
 				149754802971F875003AE965 /* white.jpg */,
 			);
 			path = ship;

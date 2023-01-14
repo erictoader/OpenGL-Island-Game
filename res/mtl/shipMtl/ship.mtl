@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/dark_wood.jpg
+map_Kd ../../textures/ship/dark_wood.jpg
 
 newmtl Material.001
 Ns 224.999985
@@ -19,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/dark_wood.jpg
+map_Kd ../../textures/ship/dark_wood.jpg
 
 newmtl Material.002
 Ns 224.999985
@@ -29,7 +29,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/bronze.jpg
+map_Kd ../../textures/ship/bronze.jpg
 
 newmtl Material.003
 Ns 224.999985
@@ -39,7 +39,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/iron.jpg
+map_Kd ../../textures/ship/iron.jpg
 
 newmtl Material.004
 Ns 224.999985
@@ -49,17 +49,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/white.jpg
-
-newmtl Material.005
-Ns 224.999985
-Ka 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd ../textures/ship/glass.jpg
+map_Kd ../../textures/ship/white.jpg
 
 newmtl Material.006
 Ns 224.999985
@@ -69,7 +59,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/white.jpg
+map_Kd ../../textures/ship/white.jpg
 
 newmtl Material.007
 Ns 224.999985
@@ -79,7 +69,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/iron.jpg
+map_Kd ../../textures/ship/iron.jpg
 
 newmtl Material.008
 Ns 224.999985
@@ -89,4 +79,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd ../textures/ship/white.jpg
+map_Kd ../../textures/ship/white.jpg

@@ -1,7 +1,7 @@
 #include "main.hpp"
 
 // Camera/player object
-gps::Camera camera(glm::vec3(0.0f, 20.0f, 100.0f), glm::vec3(0.0f, 20.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f, 0.0f, 0.0f);
+gps::Camera camera(glm::vec3(0.0f, 20.0f, 100.0f), glm::vec3(0.0f, 20.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 3.0f, 0.0f, 0.0f);
 
 // Movable objects
 etoader::PirateShip ship(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, 3.0f);
@@ -21,17 +21,19 @@ std::mt19937 rng(dev());
 // 3D Model Objects
 gps::Model3D shipObject;
 gps::Model3D shipWheel;
+gps::Model3D shipWindows;
 bool controllingShip = false;
 
 gps::Model3D dragonBody;
 gps::Model3D dragonWingLeft;
 gps::Model3D dragonWingRight;
-std::uniform_int_distribution<int> dragonAngles(-2, 2);
+std::uniform_int_distribution<int> dragonAngles(-1, 1);
 int lastDragonRotate;
-float dragonWingsAngle = 10.f;
+float dragonWingsAngle = 15.f;
 bool dragonWingsAscending = false;
 
 gps::Model3D sceneObject;
+gps::Model3D villageWindows;
 
 gps::Model3D sunObject;
 gps::Model3D moonObject;
@@ -85,6 +87,11 @@ bool muteAudio = true;
 ALuint seaSound;
 std::thread seaPlayerThread;
 
+// Mouse callback data
+double prevX = 0;
+double prevY = 0;
+float sensitivity = 0.15f;
+
 void windowResizeCallback(GLFWwindow* window, int width, int height) {
 	glfwSetWindowSize(window, width, height);
 }
@@ -136,9 +143,6 @@ void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int
 	}
 }
 
-double prevX = 0;
-double prevY = 0;
-float sensitivity = 0.15f;
 void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 	double deltaX = xpos - prevX;
 	double deltaY = prevY - ypos;
@@ -270,11 +274,14 @@ void initOpenGLState() {
 	
 	glEnable(GL_DEPTH_TEST); // enable depth-testing
 	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
-	glEnable(GL_CULL_FACE); // cull face
-	glCullFace(GL_BACK); // cull back face
+	//glEnable(GL_CULL_FACE); // cull face
+	//glCullFace(GL_BACK); // cull back face
 	glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
 	
 	glEnable(GL_FRAMEBUFFER_SRGB);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void dayNightCycle() {
@@ -348,7 +355,7 @@ void moveDragon() {
 
 void moveDragonWings() {
 	if (dragonWingsAscending) {
-		dragonWingsAngle += 0.3f;
+		dragonWingsAngle += 0.4f;
 	} else {
 		dragonWingsAngle -= 0.3f;
 	}
@@ -442,7 +449,7 @@ void drawWaterfalls() {
 void drawObjects(gps::Shader shader, bool depthPass) {
 	
 	shader.useShaderProgram();
-	
+
 	glUniform1f(glGetUniformLocation(shader.shaderProgram, "dayFactor"), dayFactor);
 	
 	// World
@@ -533,6 +540,27 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 	
 	dragonWingRight.Draw(shader);
 	
+	// Windows
+	model = glm::mat4(1.0f);
+	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
+	
+	villageWindows.Draw(shader);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, ship.getPosition());
+	model = glm::rotate(model, ship.getYawAngle(), glm::vec3(0, 1, 0));
+	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	if (!depthPass) {
+		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
+		glUniformMatrix3fv(glGetUniformLocation(myCustomShader.shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+	}
+	
+	shipWindows.Draw(shader);
+	
 	// Waterfalls
 	drawWaterfalls();
 	
@@ -618,9 +646,11 @@ void cleanup() {
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"	// Added due to sprintf
 void initObjects() {	
 	sceneObject.LoadModel("res/objects/scene.obj", "res/mtl/");
+	villageWindows.LoadModel("res/objects/villagewindows.obj", "res/mtl/");
 	
-	shipObject.LoadModel("res/objects/ship.obj", "res/mtl/");
-	shipWheel.LoadModel("res/objects/shipwheel.obj", "res/mtl/");
+	shipObject.LoadModel("res/objects/shipObj/ship.obj", "res/mtl/shipMtl/");
+	shipWheel.LoadModel("res/objects/shipObj/shipwheel.obj", "res/mtl/shipMtl/");
+	shipWindows.LoadModel("res/objects/shipObj/shipwindows.obj", "res/mtl/shipMtl/");
 	
 	dragonBody.LoadModel("res/objects/dragonObj/dragon_body.obj", "res/mtl/dragonMtl/");
 	dragonWingLeft.LoadModel("res/objects/dragonObj/dragon_wing_left.obj", "res/mtl/dragonMtl/");
@@ -664,6 +694,11 @@ void initUniforms() {
 	glm::mat4 lightRotation = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightDir"), 1, glm::value_ptr(glm::inverseTranspose(glm::mat3(view * lightRotation)) * lightDir));
 	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "moonLightDir"), 1, glm::value_ptr(glm::inverseTranspose(glm::mat3(view * lightRotation)) * moonLightDir));
+	
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightPos1"), 1, glm::value_ptr(glm::vec3(-400.f, 45.f, 252.f)));
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightPos2"), 1, glm::value_ptr(glm::vec3(-360.f, 45.f, 304.5f)));
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightPos3"), 1, glm::value_ptr(glm::vec3(-391.f, 47.f, 340.f)));
+	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightPos4"), 1, glm::value_ptr(glm::vec3(-350.f, 48.f, 409.f)));
 	
 	//set light color
 	glUniform3fv(glGetUniformLocation(myCustomShader.shaderProgram, "lightColor"), 1, glm::value_ptr(lightColor));
