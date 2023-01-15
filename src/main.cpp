@@ -5,7 +5,7 @@ gps::Camera camera(glm::vec3(0.0f, 20.0f, 100.0f), glm::vec3(0.0f, 20.0f, -10.0f
 
 // Movable objects
 etoader::PirateShip ship(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, 3.0f);
-etoader::Dragon dragon(glm::vec3(300.0f, 300.0f, -300.0f), glm::vec3(1.0f, 300.0f, 0.0f), 0.0f, 0.8f);
+etoader::Dragon dragon(glm::vec3(-500.0f, 300.0f, -300.0f), glm::vec3(1.0f, 300.0f, 0.0f), 0.0f, 0.8f);
 
 // Bounding spheres
 etoader::BoundingSphere shipBounding(glm::vec3(0, 0, 0), 40.0f);

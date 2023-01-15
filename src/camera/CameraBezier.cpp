@@ -35,5 +35,3 @@ bool isValidIndex(int pos) {
 	}
 	return true;
 }
-
-

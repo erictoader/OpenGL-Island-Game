@@ -101,7 +101,9 @@ void computePointLight(vec3 lightPos, vec3 lightColor, float ambientStrength) {
 
 
 void computeDirLight(vec3 lightDir, vec3 lightColor, float ambientStrength) {
-	vec3 cameraPosEye = vec3(0.0f);//in eye coordinates, the viewer is situated at the origin
+	
+	//compute ambient light
+	ambient = ambientStrength * lightColor;
 	
 	//transform normal
 	vec3 normalEye = normalize(fNormal);
@@ -110,10 +112,8 @@ void computeDirLight(vec3 lightDir, vec3 lightColor, float ambientStrength) {
 	vec3 lightDirN = normalize(lightDir);
 	
 	//compute view direction
+	vec3 cameraPosEye = vec3(0.0f);	//in eye coordinates, the viewer is situated at the origin
 	vec3 viewDirN = normalize(cameraPosEye - fPosEye.xyz);
-		
-	//compute ambient light
-	ambient = ambientStrength * lightColor;
 	
 	//compute diffuse light
 	diffuse = max(dot(normalEye, lightDirN), 0.0f) * lightColor;
