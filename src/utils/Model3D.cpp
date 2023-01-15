@@ -54,9 +54,6 @@ namespace gps {
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 				int fv = shapes[s].mesh.num_face_vertices[f];
 
-				//gps::Texture currentTexture = LoadTexture("index1.png", "ambientTexture");
-				//textures.push_back(currentTexture);
-
 				// Loop over vertices in the face.
 				for (size_t v = 0; v < fv; v++) {
 					// access to vertex

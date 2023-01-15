@@ -28,6 +28,7 @@
 		149754042971B557003AE965 /* libsndfile.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149754032971B557003AE965 /* libsndfile.1.dylib */; };
 		149754DE2971FBD6003AE965 /* MovableObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 149754DC2971FBD6003AE965 /* MovableObject.cpp */; };
 		149754E329720498003AE965 /* Dragon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 149754E129720498003AE965 /* Dragon.cpp */; };
+		1497551D29740D29003AE965 /* CameraBezier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1497551B29740D29003AE965 /* CameraBezier.cpp */; };
 		14E3149928FDF45B008D400E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477FCCF28FDD0C200EC71B0 /* IOKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -271,6 +272,8 @@
 		149754F429720930003AE965 /* shaderStart.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shaderStart.frag; sourceTree = "<group>"; };
 		149754F529720930003AE965 /* skyboxShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = skyboxShader.vert; sourceTree = "<group>"; };
 		149754F629729178003AE965 /* glass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glass.png; sourceTree = "<group>"; };
+		1497551B29740D29003AE965 /* CameraBezier.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CameraBezier.cpp; sourceTree = "<group>"; };
+		1497551C29740D29003AE965 /* CameraBezier.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CameraBezier.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -374,6 +377,8 @@
 			children = (
 				14724B3F29194BBA007E0EC6 /* Camera.cpp */,
 				14724B4929194BBA007E0EC6 /* Camera.hpp */,
+				1497551B29740D29003AE965 /* CameraBezier.cpp */,
+				1497551C29740D29003AE965 /* CameraBezier.hpp */,
 			);
 			path = camera;
 			sourceTree = "<group>";
@@ -912,6 +917,7 @@
 				14724B5629194BBA007E0EC6 /* Shader.cpp in Sources */,
 				14724B5929194BBA007E0EC6 /* main.cpp in Sources */,
 				14724B5829194BBA007E0EC6 /* tiny_obj_loader.cpp in Sources */,
+				1497551D29740D29003AE965 /* CameraBezier.cpp in Sources */,
 				14724B5329194BBA007E0EC6 /* Mesh.cpp in Sources */,
 				1497526C2971AF5F003AE965 /* SoundDevice.cpp in Sources */,
 				14047FC7294E3CE5009D717E /* PirateShip.cpp in Sources */,
@@ -1042,6 +1048,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A625V88GP5;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"/Library/Frameworks/GLM.framework/**",
 					"/opt/homebrew/Cellar/glfw/3.3.8/include/**",
@@ -1067,6 +1074,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A625V88GP5;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"/Library/Frameworks/GLM.framework/**",
 					"/opt/homebrew/Cellar/glfw/3.3.8/include/**",

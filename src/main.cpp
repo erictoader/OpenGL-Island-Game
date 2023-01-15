@@ -82,7 +82,7 @@ bool showDepthMap;
 SoundDevice* mysounddevice = SoundDevice::get();
 SoundBuffer* soundBuffer = SoundBuffer::get();
 bool shouldStop = false;
-bool muteAudio = true;
+bool muteAudio = false;
 
 ALuint seaSound;
 std::thread seaPlayerThread;
@@ -99,6 +99,9 @@ void windowResizeCallback(GLFWwindow* window, int width, int height) {
 void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	
+	if (key == GLFW_KEY_P && action == GLFW_PRESS)
+		camera.toggleMode();
 	
 	if (pressedKeys[GLFW_KEY_LEFT_CONTROL] && key == GLFW_KEY_M && action == GLFW_PRESS)
 		muteAudio = !muteAudio;
@@ -120,7 +123,7 @@ void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int
 		dayNightDelta = 0.0f;
 	}
 	
-	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+	if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
 		polygonMode = (polygonMode + 1) % 3;
 		switch(polygonMode) {
 			case POLYGON_FILL:
@@ -340,11 +343,7 @@ void moveDragon() {
 		goto commit;
 	}
 	
-	do {
-		currentRotate = dragonAngles(rng);
-		
-	} while (abs(currentRotate - lastDragonRotate) > 1);
-	
+	currentRotate = dragonAngles(rng);
 	goto commit;
 	
 	commit:
@@ -355,9 +354,9 @@ void moveDragon() {
 
 void moveDragonWings() {
 	if (dragonWingsAscending) {
-		dragonWingsAngle += 0.4f;
+		dragonWingsAngle += 0.5f;
 	} else {
-		dragonWingsAngle -= 0.3f;
+		dragonWingsAngle -= 0.5f;
 	}
 	
 	if (dragonWingsAngle > 15.f) {
@@ -637,6 +636,7 @@ void renderScene() {
 void cleanup() {
 	shouldStop = true;
 	seaPlayerThread.join();
+	camera.dispose();
 	
 	glfwDestroyWindow(glWindow);
 	//close GL context and any other GLFW resources
@@ -753,8 +753,8 @@ void playSea(SoundSource &speaker) {
 
 void adjustSeaVolume(glm::vec3 position, SoundSource &seaSpeaker) {
 	float volume = 0.f;
-	if (position.y < 400.f)
-		volume = muteAudio ? 0.f : (400.f - position.y) / 400.f;
+	if (position.y < 250.f)
+		volume = muteAudio ? 0.f : (250.f - position.y) / 250.f;
 	
 	seaSpeaker.setVolume(volume);
 }
